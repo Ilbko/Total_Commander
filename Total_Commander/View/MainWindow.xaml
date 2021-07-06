@@ -3,9 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Total_Commander"
+        xmlns:local="clr-namespace:Total_Commander" xmlns:Control="clr-namespace:Total_Commander.View"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="600" Width="1000">
     <Grid>
         <Grid.Resources>
             <Style TargetType="ListView">
@@ -22,9 +22,8 @@
         <Grid.RowDefinitions>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        
-        
-        <ListView Grid.Column="0" Grid.Row="0"></ListView>
-        <ListView Grid.Column="2" Grid.Row="0"></ListView>
+
+        <Control:TableControl x:Name="firstFileTable" Grid.Row="0" Grid.Column="0"></Control:TableControl> 
+        <Control:TableControl x:Name="secondFileTable" Grid.Row="0" Grid.Column="2"></Control:TableControl> 
     </Grid>
 </Window>
