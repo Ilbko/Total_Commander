@@ -22,7 +22,7 @@
 
         <TextBox x:Name="pathTextBox" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Background="CadetBlue" Padding="5,0,0,0" Margin="1" KeyDown="pathTextBox_KeyDown" Text="{Binding PathString}"></TextBox>
 
-        <ListView x:Name="elementsListView" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding fileElements}" SelectedItem="{Binding SelectedElement}">
+        <ListView x:Name="elementsListView" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" MouseDoubleClick="elementsListView_MouseDoubleClick" ItemsSource="{Binding fileElements}" SelectedItem="{Binding SelectedElement}">
             <ListView.View>
                 <GridView>
                     <!--<GridViewColumn Header=""></GridViewColumn>-->

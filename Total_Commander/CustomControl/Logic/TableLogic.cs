@@ -1,9 +1,31 @@
 ﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using Total_Commander.CustomControl.ViewModel;
 using Total_Commander.Model.Base;
 
 namespace Total_Commander.CustomControl.Logic
 {
+    public static class StringExtension
+    {
+        public static string TrimEndUntil(this string str, char symbol, bool removeSymbol)
+        {
+            int symbolIndex = str.IndexOf(symbol);
+            if (symbolIndex != -1)
+            {
+                if (removeSymbol)
+                    return str.Substring(0, symbolIndex);
+                else
+                    return str.Substring(0, symbolIndex + 1);
+            }
+            else
+                return str;
+        }
+    }
+
     public static class TableLogic
     {
         internal static bool GetFileElements(ObservableCollection<FileElement> fileElements, string pathString)
@@ -24,26 +46,71 @@ namespace Total_Commander.CustomControl.Logic
             else 
                 return false;
 
-            DirectoryInfo directoryInfo;
-            foreach (string item in Directory.GetDirectories(pathString))
+            if (Directory.GetDirectoryRoot(pathString) != pathString)
             {
-                directoryInfo = new DirectoryInfo(item);
-                App.Current.Dispatcher.Invoke(() => fileElements.Add(new FileElement("[" + directoryInfo.Name + "]", directoryInfo.Extension, "<Папка>", directoryInfo.CreationTime.ToString(), directoryInfo.Attributes.ToString())));
+                App.Current.Dispatcher.Invoke(() => fileElements.Add(new FileElement("[..]", pathString.TrimEndUntil('\\', false), string.Empty, string.Empty, string.Empty, string.Empty)));
             }
 
-            FileInfo fileInfo;
-            foreach (string item in Directory.GetFiles(pathString))
+            try
             {
-                fileInfo = new FileInfo(item);
+                DirectoryInfo directoryInfo;
+                foreach (string item in Directory.GetDirectories(pathString))
+                {
+                    directoryInfo = new DirectoryInfo(item);
+                    App.Current.Dispatcher.Invoke(() => fileElements.Add(new FileElement("[" + directoryInfo.Name + "]", directoryInfo.FullName, directoryInfo.Extension, "<Папка>", directoryInfo.CreationTime.ToString(), directoryInfo.Attributes.ToString())));
+                }
 
-                string fileName;
-                int dotIndex = fileInfo.Name.IndexOf('.');
-                fileName = dotIndex != -1 ? fileInfo.Name.Substring(0, dotIndex) : fileInfo.Name;
+                FileInfo fileInfo;
+                foreach (string item in Directory.GetFiles(pathString))
+                {
+                    fileInfo = new FileInfo(item);
 
-                App.Current.Dispatcher.Invoke(() => fileElements.Add(new FileElement(fileName, fileInfo.Extension, fileInfo.Length.ToString(), fileInfo.CreationTime.ToString(), fileInfo.Attributes.ToString())));
+                    //string fileName;
+                    //int dotIndex = fileInfo.Name.IndexOf('.');
+                    //fileName = dotIndex != -1 ? fileInfo.Name.Substring(0, dotIndex) : fileInfo.Name;
+
+                    App.Current.Dispatcher.Invoke(() => fileElements.Add(new FileElement(fileInfo.Name.TrimEndUntil('.', true), fileInfo.FullName, fileInfo.Extension, fileInfo.Length.ToString(), fileInfo.CreationTime.ToString(), fileInfo.Attributes.ToString())));
+                }
+            } 
+            catch (System.Exception e) 
+            { 
+                MessageBox.Show(e.Message, "Исключение", MessageBoxButton.OK, MessageBoxImage.Error); 
+                return false; 
             }
 
             return true;
+        }
+
+        internal static void ModifyPathString(TextBox textBox, ref TableViewModel tableViewModel)
+        {
+            if (TableLogic.GetFileElements(tableViewModel.fileElements, textBox.Text))
+                tableViewModel.PathString = textBox.Text;
+            else
+                tableViewModel.PathString = tableViewModel.PathString;
+
+            Keyboard.ClearFocus();
+        }
+
+        internal static void DoubleClickItem(FileElement selectedItem, ref TableViewModel tableViewModel)
+        {
+            if (selectedItem == tableViewModel.SelectedElement)
+            {
+                if (Directory.Exists(tableViewModel.SelectedElement.filePath))
+                {
+                    tableViewModel.PathString = tableViewModel.SelectedElement.filePath;
+                }
+                else if (File.Exists(tableViewModel.SelectedElement.filePath))
+                {
+                    try
+                    {
+                        Process.Start(tableViewModel.SelectedElement.filePath);
+                    }
+                    catch (System.Exception e)
+                    {
+                        MessageBox.Show(e.Message, "Исключение", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+            }
         }
     }
 }

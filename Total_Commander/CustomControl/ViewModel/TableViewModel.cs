@@ -11,7 +11,7 @@ namespace Total_Commander.CustomControl.ViewModel
     public class TableViewModel : INotifyPropertyChanged
     {
         public ObservableCollection<FileElement> fileElements { get; set; }
-        private FileSystemWatcher fileWatcher = new FileSystemWatcher(@"C:\");
+        private FileSystemWatcher fileWatcher = new FileSystemWatcher();
 
         private FileElement selectedElement;
         public FileElement SelectedElement
@@ -53,9 +53,13 @@ namespace Total_Commander.CustomControl.ViewModel
                 pathString = value; 
                 OnPropertyChanged("PathString");
 
-                TableLogic.GetFileElements(this.fileElements, this.PathString);
-
-                this.fileWatcher.Path = PathString;
+                if (TableLogic.GetFileElements(this.fileElements, this.PathString))
+                {
+                    this.fileWatcher.Path = PathString;
+                    this.fileWatcher.EnableRaisingEvents = true;
+                }
+                else
+                    this.fileWatcher.EnableRaisingEvents = false;
             }
         }
 
@@ -73,7 +77,7 @@ namespace Total_Commander.CustomControl.ViewModel
             this.fileWatcher.Renamed += FileWatcher_Interacted;
 
             //Перед установкой значения этого поля класса FileSystemWatcher должен иметь наблюдаемый путь.
-            this.fileWatcher.EnableRaisingEvents = true;
+            //this.fileWatcher.EnableRaisingEvents = true;
         }
 
         private void FileWatcher_Interacted(object sender, FileSystemEventArgs e)
