@@ -18,9 +18,9 @@
         </Grid.RowDefinitions>
 
         <ComboBox x:Name="diskComboBox" Grid.Row="0" Grid.Column="0" Width="50" Margin="1" SelectedItem="{Binding SelectedDisk}"></ComboBox>
-        <TextBlock x:Name="diskSpaceTextBlock" Grid.Row="0" Grid.Column="1" Padding="5,0,0,0" Margin="1" Text="{Binding DiskSize}"></TextBlock>
+        <TextBlock x:Name="diskSpaceTextBlock" Grid.Row="0" Grid.Column="1" Padding="5,3,0,0" Margin="1" Text="{Binding DiskSize}"></TextBlock>
 
-        <TextBox x:Name="pathTextBox" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Background="CadetBlue" Padding="5,0,0,0" Margin="1" Text="{Binding PathString}"></TextBox>
+        <TextBox x:Name="pathTextBox" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Background="CadetBlue" Padding="5,0,0,0" Margin="1" KeyDown="pathTextBox_KeyDown" Text="{Binding PathString}"></TextBox>
 
         <ListView x:Name="elementsListView" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding fileElements}" SelectedItem="{Binding SelectedElement}">
             <ListView.View>
