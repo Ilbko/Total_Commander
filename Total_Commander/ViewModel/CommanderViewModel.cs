@@ -7,6 +7,7 @@ using System.Windows;
 using Total_Commander.Model.Base;
 using Total_Commander.View.ViewModel;
 using Total_Commander.Model;
+using Total_Commander.View;
 
 namespace Total_Commander.ViewModel
 {
@@ -19,6 +20,36 @@ namespace Total_Commander.ViewModel
             set { selectedItems = value; OnPropertyChanged("SelectedItems"); }
         }
 
+        private RelayCommand copyCommand;
+        public RelayCommand CopyCommand
+        {
+            get
+            {
+                return copyCommand ?? new RelayCommand(act => 
+                { 
+                    if (this.SelectedItems.Count > 0)
+                        new OperationWindow(this.SelectedItems, true).ShowDialog(); 
+                    else
+                        MessageBox.Show("Не выбран ни один файл!", "Total Commander", MessageBoxButton.OK, MessageBoxImage.Information);
+                });
+            }
+        }
+
+        private RelayCommand moveCommand;
+        public RelayCommand MoveCommand
+        {
+            get
+            {
+                return moveCommand ?? new RelayCommand(act => 
+                {
+                    if (this.SelectedItems.Count > 0)
+                        new OperationWindow(this.SelectedItems, false).ShowDialog();
+                    else
+                        MessageBox.Show("Не выбран ни один файл!", "Total Commander", MessageBoxButton.OK, MessageBoxImage.Information);
+                });
+            }
+        }
+
         private RelayCommand deleteCommand;
         public RelayCommand DeleteCommand
         {
@@ -27,6 +58,7 @@ namespace Total_Commander.ViewModel
                 return deleteCommand ?? new RelayCommand(act => Logic.DeleteFiles(this.SelectedItems));
             }
         }
+
         private RelayCommand exitCommand;
         public RelayCommand ExitCommand
         {

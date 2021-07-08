@@ -18,7 +18,7 @@ namespace Total_Commander.Model
                 MessageBox.Show("Не выбран ни один файл!", "Total Commander", MessageBoxButton.OK, MessageBoxImage.Information);
             else if (selectedItems.Count == 1)
             {
-                if (MessageBox.Show($"Вы уверены, что хотите переместить в Корзину выбранный файл {selectedItems[0].fileName}?", "Total Commander",
+                if (MessageBox.Show($"Вы уверены, что хотите переместить в Корзину выбранный файл {selectedItems[0].fileName + selectedItems[0].fileType}?", "Total Commander",
                     MessageBoxButton.YesNoCancel, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     try
@@ -33,15 +33,10 @@ namespace Total_Commander.Model
             }
             else
             {
-                int count = 0;
                 string items = string.Empty;
-                selectedItems.ForEach(x => 
-                { 
-                    items += "\n" + x.fileName; 
-                    count++; 
-                });
+                selectedItems.ForEach(x => items += "\n" + x.fileName + x.fileType);
 
-                if (MessageBox.Show($"Вы уверены, что хотите переместить в Корзину выбранные файлы/каталоги ({count} шт.)? {items}", "Total Commander",
+                if (MessageBox.Show($"Вы уверены, что хотите переместить в Корзину выбранные файлы/каталоги ({selectedItems.Count} шт.)? {items}", "Total Commander",
                     MessageBoxButton.YesNoCancel, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     selectedItems.ForEach(x =>
@@ -57,6 +52,46 @@ namespace Total_Commander.Model
                     });
                 }
             }
+        }
+
+        internal static void Move(List<FileElement> fileElements, string pathString)
+        {
+            fileElements.ForEach(x =>
+            {
+                try
+                {
+                    if (pathString[pathString.Length - 1] != '\\')
+                        File.Move(x.filePath, pathString + @"\" + x.fileName + x.fileType);
+                    else
+                        File.Move(x.filePath, pathString + x.fileName + x.fileType);
+                }
+                catch (System.Exception e)
+                {
+                    MessageBox.Show($"{e.Message} для файла {x.filePath}", "Исключение", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            });
+
+            MessageBox.Show("Действие выполнено.", "Total Commander", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        internal static void Copy(List<FileElement> fileElements, string pathString)
+        {
+            fileElements.ForEach(x =>
+            {
+                try
+                {
+                    if (pathString[pathString.Length - 1] != '\\')
+                        File.Copy(x.filePath, pathString + @"\" + x.fileName + x.fileType);
+                    else
+                        File.Copy(x.filePath, pathString + x.fileName + x.fileType);
+                }
+                catch (System.Exception e)
+                {
+                    MessageBox.Show($"{e.Message} для файла {x.filePath}", "Исключение", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            });
+
+            MessageBox.Show("Действие выполнено.", "Total Commander", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }

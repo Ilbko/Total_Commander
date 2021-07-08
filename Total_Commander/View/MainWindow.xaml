@@ -43,8 +43,8 @@
                     <Setter Property="Background" Value="White"></Setter>
                 </Style>
             </UniformGrid.Resources>
-            <Button>Копирование</Button>
-            <Button>Перемещение</Button>
+            <Button Command="{Binding CopyCommand}">Копирование</Button>
+            <Button Command="{Binding MoveCommand}">Перемещение</Button>
             <Button Command="{Binding DeleteCommand}">Удаление</Button>
             <Button Command="{Binding ExitCommand}">Выход</Button>
         </UniformGrid>

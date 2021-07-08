@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using Total_Commander.CustomControl.Logic;
 using Total_Commander.Model.Base;
 
@@ -30,10 +31,16 @@ namespace Total_Commander.CustomControl.ViewModel
                 OnPropertyChanged("SelectedDisk");
 
                 DriveInfo driveInfo = new DriveInfo(selectedDisk);
-                DiskSize = $"{driveInfo.AvailableFreeSpace / 1024} Кб из {driveInfo.TotalSize / 1024} Кб свободно";
+                try
+                {
+                    this.DiskSize = $"{driveInfo.AvailableFreeSpace / 1024} Кб из {driveInfo.TotalSize / 1024} Кб свободно";
+                    this.PathString = this.SelectedDisk + @":\";
+                } 
+                catch (System.Exception e)
+                {
+                    MessageBox.Show(e.Message, "Исключение", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
                 GC.Collect(GC.GetGeneration(driveInfo));
-
-                this.PathString = this.SelectedDisk + @":\";
             }
         }
 
