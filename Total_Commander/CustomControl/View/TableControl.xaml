@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Total_Commander.View"
+             xmlns:local="clr-namespace:Total_Commander.View" 
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="400">
     <Grid Background="White">
@@ -22,10 +22,9 @@
 
         <TextBox x:Name="pathTextBox" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Background="CadetBlue" Padding="5,0,0,0" Margin="1" KeyDown="pathTextBox_KeyDown" Text="{Binding PathString}"></TextBox>
 
-        <ListView x:Name="elementsListView" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" MouseDoubleClick="elementsListView_MouseDoubleClick" ItemsSource="{Binding fileElements}" SelectedItem="{Binding SelectedElement}">
+        <ListView x:Name="elementsListView" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" MouseDoubleClick="elementsListView_MouseDoubleClick" ItemsSource="{Binding fileElements}" SelectedItem="{Binding SelectedElement}" SelectionChanged="elementsListView_SelectionChanged">
             <ListView.View>
                 <GridView>
-                    <!--<GridViewColumn Header=""></GridViewColumn>-->
                     <GridViewColumn Header="Имя" DisplayMemberBinding="{Binding fileName}"></GridViewColumn>
                     <GridViewColumn Header="Тип" DisplayMemberBinding="{Binding fileType}"></GridViewColumn>
                     <GridViewColumn Header="Размер" DisplayMemberBinding="{Binding fileSize}"></GridViewColumn>

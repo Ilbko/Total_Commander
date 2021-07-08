@@ -3,9 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Total_Commander" xmlns:Control="clr-namespace:Total_Commander.View"
+        xmlns:local="clr-namespace:Total_Commander" xmlns:Control="clr-namespace:Total_Commander.View" xmlns:local1="clr-namespace:Total_Commander.CustomControl.ViewModel"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="1000">
+        Title="MainWindow" Height="600" Width="1200">
+    <Window.Resources>
+        <local1:TableViewModel x:Key="tableViewModel"></local1:TableViewModel>
+    </Window.Resources>
     <Grid>
         <Grid.Resources>
             <Style TargetType="ListView">
@@ -21,9 +24,26 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <Control:TableControl x:Name="firstFileTable" Grid.Row="0" Grid.Column="0"></Control:TableControl> 
-        <Control:TableControl x:Name="secondFileTable" Grid.Row="0" Grid.Column="2"></Control:TableControl> 
+        <Control:TableControl x:Name="firstFileTable" Grid.Row="0" Grid.Column="0" SelectedItemsProperty="{Binding SelectedItems, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></Control:TableControl>
+        <Control:TableControl x:Name="secondFileTable" Grid.Row="0" Grid.Column="2" SelectedItemsProperty="{Binding SelectedItems, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></Control:TableControl>
+        <!--нужно указать источник.-->
+        <!--SelectedItemsProperty="{Binding SelectedItems, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"-->
+        
+        <UniformGrid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Columns="4">
+            <UniformGrid.Resources>
+                <Style TargetType="Button">
+                    <Setter Property="BorderThickness" Value="1, 0, 1, 0"></Setter>
+                    <Setter Property="Margin" Value="0, 5, 0, 0"></Setter>
+                    <Setter Property="Background" Value="White"></Setter>
+                </Style>
+            </UniformGrid.Resources>
+            <Button>Копирование</Button>
+            <Button>Перемещение</Button>
+            <Button>Удаление</Button>
+            <Button Command="{Binding ExitCommand}">Выход</Button>
+        </UniformGrid>
     </Grid>
 </Window>

@@ -1,11 +1,13 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using Total_Commander.CustomControl.Logic;
 using Total_Commander.CustomControl.ViewModel;
-using Total_Commander.Model;
 using Total_Commander.Model.Base;
 
 namespace Total_Commander.View
@@ -15,7 +17,21 @@ namespace Total_Commander.View
     /// </summary>
     public partial class TableControl : UserControl
     {
-        private TableViewModel tableViewModel;
+        public TableViewModel tableViewModel;
+
+        private void pathTextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+                TableLogic.ModifyPathString(sender as TextBox, ref this.tableViewModel);
+        }
+
+        private void elementsListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            FileElement selectedItem = ((FrameworkElement)e.OriginalSource).DataContext as FileElement;
+
+            TableLogic.DoubleClickItem(selectedItem, ref this.tableViewModel);
+        }
+
         public TableControl()
         {
             InitializeComponent();
@@ -28,25 +44,24 @@ namespace Total_Commander.View
             this.tableViewModel.SelectedDisk = DriveInfo.GetDrives()[0].Name.TrimEnd(':', '\\').ToLower();
         }
 
-        private void pathTextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        public static DependencyProperty selectedItemsProperty;
+        public List<FileElement> SelectedItemsProperty
         {
-            if (e.Key == Key.Enter)
-            {
-                //if (TableLogic.GetFileElements(this.tableViewModel.fileElements, (sender as TextBox).Text))
-                //    this.tableViewModel.PathString = (sender as TextBox).Text;
-                //else
-                //    this.tableViewModel.PathString = this.tableViewModel.PathString;
-
-                //Keyboard.ClearFocus();
-                TableLogic.ModifyPathString(sender as TextBox, ref this.tableViewModel);
-            }
+            get { return (List<FileElement>)GetValue(selectedItemsProperty); }
+            set { SetValue(selectedItemsProperty, value); }
         }
 
-        private void elementsListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        static TableControl()
         {
-            FileElement selectedItem = ((FrameworkElement)e.OriginalSource).DataContext as FileElement;
+            selectedItemsProperty = DependencyProperty.Register("SelectedItemsProperty", typeof(List<FileElement>), typeof(TableControl),
+                new FrameworkPropertyMetadata(new List<FileElement>(), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        }
 
-            TableLogic.DoubleClickItem(selectedItem, ref this.tableViewModel);
+        private void elementsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            IList items = (IList)(sender as ListView).SelectedItems;
+            SelectedItemsProperty = items.Cast<FileElement>().ToList();
+            MessageBox.Show(SelectedItemsProperty.Count().ToString());
         }
     }
 }

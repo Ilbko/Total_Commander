@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,16 +14,22 @@ namespace Total_Commander.CustomControl.Logic
     {
         public static string TrimEndUntil(this string str, char symbol, bool removeSymbol)
         {
-            int symbolIndex = str.IndexOf(symbol);
+            int symbolIndex = str.LastIndexOf(symbol);
+            string result = string.Empty;
             if (symbolIndex != -1)
             {
                 if (removeSymbol)
-                    return str.Substring(0, symbolIndex);
+                    result = str.Substring(0, symbolIndex);
                 else
-                    return str.Substring(0, symbolIndex + 1);
+                    result = str.Substring(0, symbolIndex + 1);
             }
             else
-                return str;
+                result = str;
+
+            if (result.Contains(":") && !result.Contains("\\"))
+                result = result.Insert(result.Length, "\\");
+
+            return result;
         }
     }
 
@@ -48,7 +55,7 @@ namespace Total_Commander.CustomControl.Logic
 
             if (Directory.GetDirectoryRoot(pathString) != pathString)
             {
-                App.Current.Dispatcher.Invoke(() => fileElements.Add(new FileElement("[..]", pathString.TrimEndUntil('\\', false), string.Empty, string.Empty, string.Empty, string.Empty)));
+                App.Current.Dispatcher.Invoke(() => fileElements.Add(new FileElement("[..]", pathString.TrimEndUntil('\\', true), string.Empty, string.Empty, string.Empty, string.Empty)));
             }
 
             try

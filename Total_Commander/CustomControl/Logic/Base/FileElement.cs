@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Total_Commander.Model.Base
+﻿namespace Total_Commander.Model.Base
 {
     public class FileElement
     {
@@ -14,8 +8,7 @@ namespace Total_Commander.Model.Base
         public string fileCreationDate { get; set; }
         public string fileAttributes { get; set; }
 
-
-        public string filePath;
+        public string filePath { get; set; }
 
         public FileElement(string fileName, string filePath, string fileType, string fileSize, string fileCreationDate, string fileAttributes)
         {

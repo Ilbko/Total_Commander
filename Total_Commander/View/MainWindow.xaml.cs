@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Total_Commander.View;
+using Total_Commander.ViewModel;
 
 namespace Total_Commander
 {
@@ -20,9 +22,29 @@ namespace Total_Commander
     /// </summary>
     public partial class MainWindow : Window
     {
+        private CommanderViewModel commanderViewModel;
         public MainWindow()
         {
             InitializeComponent();
+            this.commanderViewModel = new CommanderViewModel();
+            this.DataContext = this.commanderViewModel;
+
+            //ПРОБЛЕМА БЫЛА В ИСТОЧНИКЕ!
+            BindingOperations.SetBinding(this.firstFileTable, TableControl.selectedItemsProperty, new Binding()
+            {
+                Source = this.commanderViewModel,
+                Path = new PropertyPath("SelectedItems"),
+                Mode = BindingMode.TwoWay,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            });
+            BindingOperations.SetBinding(this.secondFileTable, TableControl.selectedItemsProperty, new Binding()
+            {
+                Source = this.commanderViewModel,
+                Path = new PropertyPath("SelectedItems"),
+                Mode = BindingMode.TwoWay,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            });
+            MessageBox.Show("asd");
         }
     }
 }
