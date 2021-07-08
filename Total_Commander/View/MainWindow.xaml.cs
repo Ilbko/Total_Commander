@@ -22,29 +22,27 @@ namespace Total_Commander
     /// </summary>
     public partial class MainWindow : Window
     {
-        private CommanderViewModel commanderViewModel;
         public MainWindow()
         {
             InitializeComponent();
-            this.commanderViewModel = new CommanderViewModel();
-            this.DataContext = this.commanderViewModel;
+            this.DataContext = new CommanderViewModel();
 
+            //Реализация этого кода уже есть в XAML.
             //ПРОБЛЕМА БЫЛА В ИСТОЧНИКЕ!
-            BindingOperations.SetBinding(this.firstFileTable, TableControl.selectedItemsProperty, new Binding()
-            {
-                Source = this.commanderViewModel,
-                Path = new PropertyPath("SelectedItems"),
-                Mode = BindingMode.TwoWay,
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-            });
-            BindingOperations.SetBinding(this.secondFileTable, TableControl.selectedItemsProperty, new Binding()
-            {
-                Source = this.commanderViewModel,
-                Path = new PropertyPath("SelectedItems"),
-                Mode = BindingMode.TwoWay,
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-            });
-            MessageBox.Show("asd");
+            //BindingOperations.SetBinding(this.firstFileTable, TableControl.selectedItemsProperty, new Binding()
+            //{
+            //    Source = this.commanderViewModel,
+            //    Path = new PropertyPath("SelectedItems"),
+            //    Mode = BindingMode.TwoWay,
+            //    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            //});
+            //BindingOperations.SetBinding(this.secondFileTable, TableControl.selectedItemsProperty, new Binding()
+            //{
+            //    Source = this.commanderViewModel,
+            //    Path = new PropertyPath("SelectedItems"),
+            //    Mode = BindingMode.TwoWay,
+            //    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            //});
         }
     }
 }

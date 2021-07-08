@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using Total_Commander.Model.Base;
 using Total_Commander.View.ViewModel;
+using Total_Commander.Model;
 
 namespace Total_Commander.ViewModel
 {
@@ -18,15 +19,14 @@ namespace Total_Commander.ViewModel
             set { selectedItems = value; OnPropertyChanged("SelectedItems"); }
         }
 
-
-        //private RelayCommand deleteCommand;
-        //public RelayCommand DeleteCommand
-        //{
-        //    get
-        //    {
-        //        //return deleteCommand ?? new RelayCommand(() => );
-        //    }
-        //}
+        private RelayCommand deleteCommand;
+        public RelayCommand DeleteCommand
+        {
+            get
+            {
+                return deleteCommand ?? new RelayCommand(act => Logic.DeleteFiles(this.SelectedItems));
+            }
+        }
         private RelayCommand exitCommand;
         public RelayCommand ExitCommand
         {

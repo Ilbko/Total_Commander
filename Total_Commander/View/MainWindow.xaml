@@ -27,8 +27,11 @@
             <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <Control:TableControl x:Name="firstFileTable" Grid.Row="0" Grid.Column="0" SelectedItemsProperty="{Binding SelectedItems, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></Control:TableControl>
-        <Control:TableControl x:Name="secondFileTable" Grid.Row="0" Grid.Column="2" SelectedItemsProperty="{Binding SelectedItems, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></Control:TableControl>
+        <!--Тут происходит привязка свойства SelectedItems элемента управления ListView кастомного элемента TableControl. Поскольку у кастомного элемента указан свой DataContext(TableViewModel), а у главного окна - свой(CommanderViewModel), 
+        где и содержится свойство SelectedItems, то только для этих элементов(TableControl) главного окна нужно переопределить DataContext, чтобы привязаться к свойству DataContext главного окна. Объект CommanderViewModel определён в главном окне, которое является родителем кастомного
+        элемента(TableControl). Поэтому через RelativeSource мы можем обратиться к родителю (Mode=FindAncestor), тип которого - окно (AncestorType={x:Type Window} и получить путь к нужному свойству в DataContext окна(Path=DataContext.SelectedItems))-->
+        <Control:TableControl x:Name="firstFileTable" Grid.Row="0" Grid.Column="0" SelectedItemsProperty="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.SelectedItems, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></Control:TableControl>
+        <Control:TableControl x:Name="secondFileTable" Grid.Row="0" Grid.Column="2" SelectedItemsProperty="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.SelectedItems, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></Control:TableControl>
         <!--нужно указать источник.-->
         <!--SelectedItemsProperty="{Binding SelectedItems, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"-->
         
@@ -42,7 +45,7 @@
             </UniformGrid.Resources>
             <Button>Копирование</Button>
             <Button>Перемещение</Button>
-            <Button>Удаление</Button>
+            <Button Command="{Binding DeleteCommand}">Удаление</Button>
             <Button Command="{Binding ExitCommand}">Выход</Button>
         </UniformGrid>
     </Grid>

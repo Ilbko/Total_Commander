@@ -61,7 +61,6 @@ namespace Total_Commander.View
         {
             IList items = (IList)(sender as ListView).SelectedItems;
             SelectedItemsProperty = items.Cast<FileElement>().ToList();
-            MessageBox.Show(SelectedItemsProperty.Count().ToString());
         }
     }
 }
