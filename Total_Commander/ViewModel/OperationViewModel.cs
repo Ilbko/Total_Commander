@@ -1,12 +1,8 @@
 ﻿using GalaSoft.MvvmLight.Command;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using Total_Commander.Model;
 using Total_Commander.Model.Base;
@@ -19,6 +15,7 @@ namespace Total_Commander.ViewModel
         private bool isCopy;
         private List<FileElement> fileElements;
 
+        //Путь, по которому будет производиться действие (копирование, перемещение)
         private string pathString;
         public string PathString
         {
@@ -26,6 +23,7 @@ namespace Total_Commander.ViewModel
             set { pathString = value; OnPropertyChanged("PathString"); }
         }
 
+        //Команда нажатия на кнопку "ОК"
         private RelayCommand<OperationWindow> okCommand;
         public RelayCommand<OperationWindow> OKCommand
         {
@@ -35,12 +33,13 @@ namespace Total_Commander.ViewModel
                 {
                     if (Directory.Exists(PathString))
                     {
+                        //Если в конструкторе вторым параметром было передано true, то будет произведено копирование. Перемещение файлов будет в обратном случае.
                         if (this.isCopy)
-                            Logic.Copy(this.fileElements, this.PathString);
+                            Logic.CopyFiles(this.fileElements, this.PathString);
                         else
-                            Logic.Move(this.fileElements, this.PathString);
+                            Logic.MoveFiles(this.fileElements, this.PathString);
 
-
+                        act.Close();
                     }
                     else
                         MessageBox.Show("Директория не существует!", "Total Commander", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -48,6 +47,7 @@ namespace Total_Commander.ViewModel
             }
         }
 
+        //Команда нажатия на кнопку "Отмена"
         private RelayCommand<OperationWindow> cancelCommand;
         public RelayCommand<OperationWindow> CancelCommand
         {

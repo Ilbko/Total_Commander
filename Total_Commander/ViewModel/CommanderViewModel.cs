@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using Total_Commander.Model.Base;
-using Total_Commander.View.ViewModel;
 using Total_Commander.Model;
+using Total_Commander.Model.Base;
 using Total_Commander.View;
+using Total_Commander.View.ViewModel;
 
 namespace Total_Commander.ViewModel
 {
     public class CommanderViewModel : INotifyPropertyChanged
     {
+        //Список выбранных элементов (их передают кастомные элементы TableControl для их дальнейшей обработки)
         private List<FileElement> selectedItems = new List<FileElement>();
         public List<FileElement> SelectedItems
         {
@@ -20,11 +20,14 @@ namespace Total_Commander.ViewModel
             set { selectedItems = value; OnPropertyChanged("SelectedItems"); }
         }
 
+        //Команда копирования файлов
         private RelayCommand copyCommand;
         public RelayCommand CopyCommand
         {
             get
             {
+                //При копировании и перемещении файлов создаётся новое окно через конструктор, где ему передаются список выбранных файлов и bool значение. От него зависит
+                //текст в окне и команда, выполняемая при нажатии кнопки "ОК" (если true - копирование, false - перемещение)
                 return copyCommand ?? new RelayCommand(act => 
                 { 
                     if (this.SelectedItems.Count > 0)
@@ -35,6 +38,7 @@ namespace Total_Commander.ViewModel
             }
         }
 
+        //Команда перемещения файлов
         private RelayCommand moveCommand;
         public RelayCommand MoveCommand
         {
@@ -50,21 +54,29 @@ namespace Total_Commander.ViewModel
             }
         }
 
+        //Команда удаления файлов
         private RelayCommand deleteCommand;
         public RelayCommand DeleteCommand
         {
             get
             {
-                return deleteCommand ?? new RelayCommand(act => Logic.DeleteFiles(this.SelectedItems));
+                return deleteCommand ?? new RelayCommand(act => 
+                {
+                    if (this.SelectedItems.Count > 0)
+                        Logic.DeleteFiles(this.SelectedItems);
+                    else
+                        MessageBox.Show("Не выбран ни один файл!", "Total Commander", MessageBoxButton.OK, MessageBoxImage.Information);
+                });
             }
         }
 
+        //Команда выхода с программы
         private RelayCommand exitCommand;
         public RelayCommand ExitCommand
         {
             get
             {
-                return exitCommand ?? new RelayCommand(act => { MessageBox.Show(SelectedItems.Count.ToString()); Environment.Exit(0); });
+                return exitCommand ?? new RelayCommand(act => { Environment.Exit(0); });
             }
         }
 
